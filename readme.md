@@ -8,10 +8,17 @@ WCS is inspired by migration terminology used in popular frameworks such as Lara
 ## Terminology and plugin structure
 
 
+### File structure
+`/schema` Home for all your igration files. If your are using this in a Wordpress Multisite (WPMU) setup please seperate schema files in folders matching blog id's or domain names. Schema files in the root will run for all sites in the network.
+
+* `/assets` *holds all static assets needed to display custom fields in the Wordpress admin interface. WCS uses bootstrap 5.0 prefixed to only work within the class **.bootstrap-admin** to avoid any conflict with other stylesheets in the interface.*
+* `/fields` *holds all fields type that you can use to define custom fields. Each class corresponds to a different form element and is therefore rendered in different ways.*
+* `post_type.php` *Custom post type object.*
+* `wordpress-custom-schema.php` *Main plugin file. Will determine what schema files to load depending on the wordpress configuration.*
 
 ## How to get started
 WCS is not hosted in the official Wordpress Plugin channel. This plugin is soley intended to be used
-by secious web programmers building enterprise websites backed by Wordpress. This plugin cannot be used without any programming knowledge. There are other alternatives out there that we can recommend if you are looking for an interface to manage custom- types and fields: [Advanced Custom Fields (ACF)](https://advancedcustomfields.com) og [Toolset](http://toolset.com) er blandt de mest populære.
+by secious web programmers building enterprise websites backed by Wordpress. This plugin cannot be used without any programming knowledge. There are other alternatives out there that we can recommend if you are looking for an interface to manage custom- types and fields: [Advanced Custom Fields (ACF)](https://advancedcustomfields.com) og [Toolset](http://toolset.com) are among the most popular.
 
 ### Installation
 You need access to your webhost through FTP or similar protocols.
