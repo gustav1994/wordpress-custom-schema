@@ -5,7 +5,13 @@ WCS is inspired by migration terminology used in popular frameworks such as Lara
 
 **Wordpress Custom Schema (WCS) will not alter any database tables.**
 
+## Terminology and plugin structure
+
+
+
 ## How to get started
+WCS is not hosted in the official Wordpress Plugin channel. This plugin is soley intended to be used
+by secious web programmers building enterprise websites backed by Wordpress. This plugin cannot be used without any programming knowledge. There are other alternatives out there that we can recommend if you are looking for an interface to manage custom- types and fields: [Advanced Custom Fields (ACF)](https://advancedcustomfields.com) og [Toolset](http://toolset.com) er blandt de mest populære.
 
 ### Installation
 You need access to your webhost through FTP or similar protocols.
