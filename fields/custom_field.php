@@ -4,10 +4,10 @@
         exit;
     }
 
-    class PostType
+    class WCSCustomField
     {
 
-
+        
 
 
     }
