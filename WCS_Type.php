@@ -4,9 +4,6 @@
         exit;
     }
 
-    require_once(ABSPATH . "/wp-includes/class-wp-post-type.php");
-    require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/WCS_Group.php");
-
     class WCS_Type
     {
         /**
@@ -15,17 +12,7 @@
          *
          * @var string
          */
-        protected $name;
-
-        /**
-         * Internal WP_Post_Type class. This will define all necessary
-         * settings for a post type in Wordpress.
-         * 
-         * https://core.trac.wordpress.org/browser/tags/5.7.1/src/wp-includes/class-wp-post-type.php#L17
-         *
-         * @var class
-         */
-        protected $postInstance;
+        protected $key;
 
         /**
          * Array of Wordpress Meta boxes that containts fields
@@ -35,37 +22,39 @@
          */
         protected $groups = [];
 
-        public function __construct( string $name, $args = [] )
-        {
-            if( $this->validateName($name) ) {
-                
-                $this->name = $name;
-
-                if( is_a($args, 'WP_Post_Type') ) {
-                    
-                    $this->postInstance = $args;
-
-                } else {
-
-                    $this->postInstances = new WP_Post_Type($name, $args);
-
-                }
-            
-                return true;
-            }
-
-            return false;
+        /**
+         * Define the custom post type name along with it's arguments.
+         * Will register new post type if it not already exists
+         *
+         * @param string $name
+         * @param array $args
+         */
+        public function __construct( string $key )
+        {          
+            return $this;
         }
 
         /**
-         * Validate according to the definitions in Wordpress built-in function sanitize_key()
+         * 1. Create post-type if it does not exists
+         * 2. 
          *
-         * @param string $name
+         * @return void
+         */
+        public function activate()
+        {
+
+        }
+
+        /**
+         * Function to validate key according to the requiements put up by
+         * wordpress built in function sanitize_key
+         *
+         * @param string $key
          * @return bool
          */
-        public function validateName( $name ) : bool
+        private function validateKey( $key ) : bool
         {
-            return is_string($name) && strlen($name) > 0 && strlen($name) <= 20 && preg_match("/^[a-z\_\-]{1,20}$/", $name);
+            return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
         }
-                
+   
     }
