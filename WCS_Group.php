@@ -4,7 +4,7 @@
         exit;
     }
 
-    abstract class WCSGroup
+    class WCS_Group
     {
         protected $fields = [];
     }
