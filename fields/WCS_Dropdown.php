@@ -24,7 +24,7 @@
 
         public function sanitize( $value )
         {
-            return floatval($value);
+            return sanitize_text_field($value);
         }
 
     }
