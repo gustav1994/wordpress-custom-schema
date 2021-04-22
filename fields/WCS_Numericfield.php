@@ -2,7 +2,7 @@
 
     require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/fields/WCS_Field.php");
 
-    class WCS_Textfield extends WCS_Field
+    class WCS_Numericfield extends WCS_Field
     {
         protected $min = -99999999999999;
         protected $max = 99999999999999;
