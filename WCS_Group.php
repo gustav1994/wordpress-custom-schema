@@ -208,6 +208,7 @@
         protected function renderGrid( array $positions ) : string
         {                             
             $columns = [];
+            
             $firstEmptyPosition = 1;
 
             foreach( $positions as $position ) {
