@@ -28,6 +28,13 @@
         protected $description;
 
         /**
+         * Id for the HTML elements
+         *
+         * @var [type]
+         */
+        protected $element_id;
+
+        /**
          * Closure function for sanitizing value if needed
          *
          * @var callable
@@ -84,6 +91,7 @@
             if( $this->validateKey($key) ) {
                 
                 $this->key = $key;
+                $this->element_id = "WCS-{$this->randomString(5, 10)}";
 
                 add_action('save_post', [$this, "save"]);
 
@@ -101,9 +109,9 @@
         public function save( int $post_id, $post ) : int
         {            
             $valid = is_callable($this->validator) ? $this->validator($_POST[$this->key]) : true;
-            $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]);            
-
-            if( current_user_can("edit_post", $post_id) && $valid && !wp_is_post_autosave($post_id) ) {
+            $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]); 
+            
+            if( current_user_can("edit_post", $post_id) && $valid && !wp_is_post_autosave($post_id) && wp_verify_nonce($_POST[$this->getNonceName()]) ) {
 
                 update_post_meta($post_id, $this->key, $sanitized);
 
@@ -111,6 +119,19 @@
             
             return $post_id;
         }  
+        
+        /**
+         * Override the element id for the input/select field
+         *
+         * @param string $id
+         * @return void
+         */
+        public function setElementId( string $id )
+        {
+            $this->element_id = $id;
+
+            return $this;
+        }
 
         /**
          * Set readable name for the input field
@@ -191,15 +212,81 @@
         }
 
         /**
+         * Return a hidden field to use as cross-site protection
+         *
+         * @param int|string $action
+         * @param string $name
+         * @param bool $referer
+         * @return void
+         */
+        protected function getNonceField()
+        {
+            return wp_nonce_field( -1, $this->getNonceName(), false, false );
+        }
+
+        /**
+         * Return the hidden input _POST name for nonce checkers
+         *
+         * @return void
+         */
+        protected function getNonceName()
+        {
+            return "_WCS_{$this->key}_none";
+        }
+
+        /**
          * Function to validate key according to the requiements put up by
          * wordpress built in function sanitize_key
          *
          * @param string $key
          * @return bool
          */
-        private function validateKey( $key ) : bool
+        protected function validateKey( $key ) : bool
         {
             return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
+        }
+
+        /**
+         * Function for generating a random string
+         *
+         * @param integer $min
+         * @param integer $max
+         * @param boolean $letters
+         * @param boolean $numbers
+         * @param boolean $signs
+         * @return void
+         */
+        protected function randomString($min = 5, $max = 20, $letters = true, $numbers = true, $signs = false)
+        {
+            $string = '';
+
+            if( $letters )
+                $string .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+            if( $numbers )
+                $string .= '0123456789';
+        
+            if( $signs )
+                $string .= '@$%&/()=+-';
+        
+            // Check to see if string length is
+            if(strlen($string) == 0)
+                return false;
+        
+            // Pick random length
+            $length = rand($min, $max);
+        
+            // Repeat string if not long enough
+            while( strlen($string) < $length ) {
+        
+                $string = $string . $string;
+        
+            }
+        
+            // Shuffle The String
+            $random = str_shuffle($string);
+        
+            return substr($random, 0, $length);
         }
 
     }
