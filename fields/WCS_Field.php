@@ -110,7 +110,7 @@
          *
          * @return integer
          */
-        public function save( int $post_id, $post ) : int
+        public function save( int $post_id, $post = null ) : int
         {            
             $valid = is_callable($this->validator) ? $this->validator($_POST[$this->key]) : true;
             $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]); 
