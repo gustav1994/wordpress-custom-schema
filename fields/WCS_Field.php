@@ -11,7 +11,7 @@
          *
          * @var string
          */
-        protected $key;
+        public $key;
 
         /**
          * End-user readable name
@@ -93,7 +93,9 @@
                 $this->key = $key;
                 $this->element_id = "WCS-{$this->randomString(5, 10)}";
 
-                add_action('save_post', [$this, "save"]);
+                if( function_exists("add_action") ) {
+                    add_action('save_post', [$this, "save"]);
+                }
 
             }
 
@@ -113,7 +115,9 @@
             
             if( current_user_can("edit_post", $post_id) && $valid && !wp_is_post_autosave($post_id) && wp_verify_nonce($_POST[$this->getNonceName()]) ) {
 
-                update_post_meta($post_id, $this->key, $sanitized);
+                if( function_exists("update_post_meta") ) {
+                    update_post_meta($post_id, $this->key, $sanitized);
+                }
 
             }   
             
@@ -221,7 +225,7 @@
          */
         protected function getNonceField()
         {
-            return wp_nonce_field( -1, $this->getNonceName(), false, false );
+            return function_exists("wp_nonce_field") ? wp_nonce_field( -1, $this->getNonceName(), false, false ) : false;
         }
 
         /**
@@ -231,7 +235,7 @@
          */
         protected function getNonceName()
         {
-            return "_WCS_{$this->key}_none";
+            return "_WCS_{$this->key}_nonce";
         }
 
         /**
