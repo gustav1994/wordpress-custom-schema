@@ -21,6 +21,13 @@
         protected $name;
 
         /**
+         * Initial description of the field group
+         *
+         * @var string
+         */
+        protected $description;
+
+        /**
          * Define what post-types this group should be activated for
          *
          * @var array
@@ -101,6 +108,19 @@
         }
 
         /**
+         * Set the field group description
+         *
+         * @param string $description
+         * @return void
+         */
+        public function setDescription( string $description )
+        {
+            $this->description = $description;
+
+            return $this;
+        }
+
+        /**
          * Add one or more fields to this group
          *
          * @param [type] $fields
@@ -163,7 +183,8 @@
             }, $this->fields));
 
             return "
-                <div class='wp-admin-bootstrap'>                    
+                <div class='wp-admin-bootstrap'> 
+                    <p class='mb-4'>{$this->description}</p>
                     {$grid}                
                 </div>
             ";
@@ -197,7 +218,8 @@
 
                 // Push cols to avoid overlap
                 if( $startPosition < $firstEmptyPosition ) {
-                    $startPosition = $firstEmptyPosition;
+                    $endPosition = $firstEmptyPosition + $endPosition - $startPosition;
+                    $startPosition = $firstEmptyPosition;                    
                 }
 
                 // Generate offset-cols if necesary
@@ -213,9 +235,7 @@
 
                 // Column should not break lines
                 if( $endPosition > $row * 12) {
-
                     $endPosition = $row * 12;
-
                 }
 
                 $length = 1 + $endPosition - $startPosition;                

@@ -1,0 +1,25 @@
+/**
+* Command to compile and watch SASS FILE: (Antager at du allerede står i mappen med scss filerne)
+*      
+*      sass --watch app.scss ../css/app.min.css
+*
+* Installer SASS/SCSS på Mac:
+*      
+*      npm install -g sass
+*      
+*      eller
+* 
+*      brew install sass/sass/sass
+*
+* Find ud af hvad der kan ændres i bootstrap:
+*      https://getbootstrap.com/docs/5.0/customize/overview/ 
+*
+* SASS/SCSS Dokumentation
+*      https://sass-lang.com/documentation
+*/
+
+.wp-admin-bootstrap {
+    
+    @import "./bootstrap-5.0.0-beta3/bootstrap";
+
+}

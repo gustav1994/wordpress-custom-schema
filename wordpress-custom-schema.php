@@ -62,3 +62,8 @@
 
     /* - - - - - - - - - - - - LOAD SCRIPTS AND STYLESHEETS IN ADMIN INTERFACE - - - - - - - - - - - - - - - - */
     
+    add_action('admin_enqueue_scripts', function(){
+
+        wp_enqueue_style('bootstrap', plugin_dir_url(__FILE__) . '/assets/css/admin.min.css');           
+
+    });
