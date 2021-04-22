@@ -21,6 +21,13 @@
         protected $name;
 
         /**
+         * Define what post-types this group should be activated for
+         *
+         * @var array
+         */
+        protected $post_types = [];
+
+        /**
          * Array of custom fields all instances of class that inherits the
          * WCS_Field instance in /wp-content/plugins/wordpress-custom-schema/fields
          *
@@ -53,13 +60,31 @@
 
                 return add_action("add_meta_boxes", function(){
                     
-                    add_meta_box($this->key, $this->name, [$this, "render"], [], 'normal', 'default');        
+                    add_meta_box($this->key, $this->name, [$this, "output"], $this->post_types, 'normal', 'default');        
 
                 });
 
             }
 
             return false;
+        }
+
+        /**
+         * Define what post-types we should activate 
+         * this group for
+         *
+         * @param [type] $types
+         * @return void
+         */
+        public function setPostTypes( $types )
+        {
+            foreach( $types as $type ) {
+                if( $this->validateKey($type) ) {
+                    $this->post_types[] = $type;
+                }
+            }
+
+            return $this;
         }
 
         /**
@@ -105,6 +130,20 @@
         }        
 
         /**
+         * Wordpress would like us to echo out the rendered group
+         *
+         * @return void
+         */
+        public function output( $post = null )
+        {
+            $html = $this->render($post);
+
+            echo $html;
+
+            return $html;
+        }
+
+        /**
          * Render the meta box content by rendering every field in the group into
          * the bootstrap 12 width grid
          *
@@ -115,7 +154,11 @@
         {
             $grid = $this->renderGrid(array_map(function($field) use ($post) {
 
-                return [$field->start_position, $field->end_position, $field->render($post)];
+                return [
+                    $field->start_position,
+                    $field->end_position,
+                    $field->render($post)
+                ];
 
             }, $this->fields));
 

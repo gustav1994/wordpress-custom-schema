@@ -125,6 +125,21 @@
         }  
         
         /**
+         * Just so wordpress can use this class
+         *
+         * @param [type] $post
+         * @return void
+         */
+        public function output( $post = null )
+        {
+            $html = $this->render($post);            
+            
+            echo $html;
+
+            return $html;
+        }
+
+        /**
          * Override the element id for the input/select field
          *
          * @param string $id

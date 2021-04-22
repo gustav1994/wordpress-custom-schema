@@ -35,6 +35,7 @@
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
                 {$this->getNonceField()}
             ";
+
         }
 
         public function sanitize( $value )
