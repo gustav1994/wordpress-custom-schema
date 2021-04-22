@@ -2,7 +2,7 @@
 
     require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/fields/WCS_Field.php");
 
-    class WCS_Textfield extends WCS_Field
+    class WCS_Dropdown extends WCS_Field
     {
         protected $options = [];
 
