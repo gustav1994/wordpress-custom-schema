@@ -19,20 +19,25 @@
 
         public function render( $post ) : string
         {            
-            $html = "";
+            $checkboxes = "";
 
             foreach($this->options as $key => $value) {
 
-                $html .= "
+                $checkboxes .= "
                     <div class='form-check'>
                         <input class='form-check-input' type='radio' name='{$this->key}' id='{$this->element_id}-{$key}' />
-                        <label class='form-check-label' for='{$this->element_id}-{$key}'>{$this->name}</label>
+                        <label class='form-check-label' for='{$this->element_id}-{$key}'>{$value}</label>
                     </div>                
                 ";
 
             }
 
-            return $html;
+            return "
+                <label class='mb-1'>{$this->name}</label>
+                {$checkboxes}                
+                <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                {$this->getNonceField()}
+            ";
         }
 
         public function sanitize( $value )
