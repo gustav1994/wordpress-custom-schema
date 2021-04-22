@@ -13,6 +13,8 @@
         exit;
     }
 
+    /* - - - - - - - - - - - - HOOK INTO THE INIT ACTION AND RENDER ALL SCHEMA'S - - - - - - - - - - - - - - - - */
+
     add_action("init", function(){
 
         $path = plugin_dir_path(__FILE__);
@@ -57,4 +59,6 @@
         }
 
     });
+
+    /* - - - - - - - - - - - - LOAD SCRIPTS AND STYLESHEETS IN ADMIN INTERFACE - - - - - - - - - - - - - - - - */
     
