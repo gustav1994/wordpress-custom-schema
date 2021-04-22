@@ -59,7 +59,7 @@
          *         
          * @return int
          */
-        protected $end_position
+        protected $end_position;
         
         /**
          * Enforce sub-classes to implement a rendering method
