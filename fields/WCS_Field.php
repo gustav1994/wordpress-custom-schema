@@ -59,14 +59,14 @@
          *
          * @var int
          */
-        protected $start_position;
+        public $start_position;
 
         /**
          * End position
          *         
          * @return int
          */
-        protected $end_position;
+        public $end_position;
         
         /**
          * Enforce sub-classes to implement a rendering method
