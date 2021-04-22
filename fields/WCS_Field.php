@@ -40,6 +40,26 @@
          * @var callable
          */
         protected $validator;
+
+        /**
+         * Utilizes the Bootstrap grid system this will be the start position
+         * in a 12 width grid system.
+         * 
+         * The difference between the start_position and the end_position determines the width.
+         * length = end_position - start_postion
+         * 
+         * By definition the length cannot exceed 12 
+         *
+         * @var int
+         */
+        protected $start_position;
+
+        /**
+         * End position
+         *         
+         * @return int
+         */
+        protected $end_position
         
         /**
          * Enforce sub-classes to implement a rendering method
@@ -114,6 +134,28 @@
         public function setDescription( string $description )
         {
             $this->description = $description;
+
+            return $this;
+        }
+
+        /**
+         * Determines the field position in a bootstrap 12 width grid.
+         * Empty spaces will be filled with offsets by the fieldgroup
+         *
+         * @param integer $start
+         * @param integer $end
+         * @return void
+         */
+        public function setPosition( int $start, int $end)
+        {
+            $length = $end - $start;
+
+            if( $length <= 12 && $length > 0 ) {
+
+                $this->start_position = $start;
+                $this->end_position = $end;
+
+            }
 
             return $this;
         }
