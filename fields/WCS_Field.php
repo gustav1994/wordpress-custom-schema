@@ -16,7 +16,7 @@
         /**
          * End-user readable name
          *
-         * @var [type]
+         * @var string
          */
         protected $name;
 
@@ -30,7 +30,7 @@
         /**
          * Id for the HTML elements
          *
-         * @var [type]
+         * @var string
          */
         protected $element_id;
 
@@ -78,6 +78,8 @@
         /**
          * Define how the field data should be sanitized before calling
          * wordpress function update_post_meta()
+         * 
+         * @param mixed $value
          */
         abstract function sanitize( $value );             
 
