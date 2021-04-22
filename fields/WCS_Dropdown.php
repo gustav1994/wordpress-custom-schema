@@ -19,7 +19,22 @@
 
         public function render( $post ) : string
         {
-            return "";
+            $options_arr = [];
+
+            foreach($this->options as $key => $value) {
+
+                $options_arr[] = "<option value='{$key}'>{$value}</option>";
+
+            }
+
+            return "
+                <label for='{$this->element_id}' class='form-label'>{$this->name}</label>                
+                <select name='{$this->key}' id='{$this->element_id}' class='form-control' aria-describedby='{$this->element_id}-help-text'>
+                    ". implode("", $options_arr) . "
+                </select>
+                <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                {$this->getNonceField()}
+            ";
         }
 
         public function sanitize( $value )
