@@ -61,13 +61,13 @@
          *
          * @return void
          */
-        public function hook()
+        public function hook() : bool
         {
             if( function_exists("add_action") ) {
 
                 foreach( $this->post_types as $type ) {
 
-                    add_action("add_meta_boxes_{$type}", function(){
+                    add_action("add_meta_boxes_{$type}", function() use ($type) {
                         
                         add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');        
 
@@ -89,6 +89,8 @@
          */
         public function setPostTypes( $types )
         {
+            $types = is_array($types) ? $types : [$types];
+
             foreach( $types as $type ) {
                 if( $this->validateKey($type) ) {
                     $this->post_types[] = $type;
@@ -106,7 +108,9 @@
          */
         public function setName( string $name ) 
         {
-            $this->name = $name;
+            if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name ) {
+                $this->name = $name;
+            }            
 
             return $this;
         }
@@ -138,7 +142,7 @@
                 $this->fields[$field->key] = $field;
             }     
             
-            // Sort by the start_position ascending
+            // Sort by the start_position ascending. Empty starts positions go in the bottom
             usort($this->fields, function($a, $b){  
                                 
                 if( is_numeric($a->start_position) && is_numeric($b->start_position) ) {
@@ -155,10 +159,11 @@
 
         /**
          * Wordpress would like us to echo out the rendered group
+         * Just a wrapper around the render function
          *
          * @return void
          */
-        public function output( $post = null )
+        public function output( $post = null ) : string
         {
             $html = $this->render($post);
 
@@ -174,7 +179,7 @@
          * @param [type] $post
          * @return string
          */
-        public function render( $post = null ) : string
+        public function render( $post = null, $echo = false ) : string
         {
             $grid = $this->renderGrid(array_map(function($field) use ($post) {
 
@@ -185,6 +190,10 @@
                 ];
 
             }, $this->fields));
+
+            if( $echo ) {
+                $this->output( $post );
+            }
 
             return "
                 <div class='wp-admin-bootstrap'> 
@@ -223,8 +232,10 @@
 
                 // Push cols to avoid overlap
                 if( $startPosition < $firstEmptyPosition ) {
+
                     $endPosition = $firstEmptyPosition + $endPosition - $startPosition;
                     $startPosition = $firstEmptyPosition;                    
+
                 }
 
                 // Generate offset-cols if necesary
@@ -238,9 +249,11 @@
 
                 $row = floor($startPosition / 12) + 1;
 
-                // Column should not break lines
+                // Column should not break lines so determine max end position
                 if( $endPosition > $row * 12) {
+
                     $endPosition = $row * 12;
+
                 }
 
                 $length = 1 + $endPosition - $startPosition;                
