@@ -65,9 +65,13 @@
          * @param [type] $value
          * @return void
          */
-        public function setArgs( string $key, $value )
+        public function setArgs( $key, $value = null )
         {
-            $this->args[$key] = $value;
+            $key = is_array($key) ? $key : [$key => $value];
+            
+            foreach($key as $index => $value) { 
+                $this->args[$index] = $value;
+            }
 
             return $this;
         }
