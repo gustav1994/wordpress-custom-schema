@@ -33,6 +33,7 @@ One post type with a single group containing 1 field. Demonstrates the most basi
 ```php
 require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/WCS_Type.php");
 require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/WCS_Group.php");
+
 require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/fields/WCS_Textfield.php");    
 
 $txt = (new WCS_textfield('my-text-field'))
@@ -50,8 +51,92 @@ $type = (new WCS_Type('my-custom-post')
             ->hook() // Tell wordpress to render this schema
 ```
 ### Advanced Example
+This example shows you how to create a single custom post type with ...
+
+1. two field groups
+2. groups with custom positioning
+3. defining full schema as inline script without variables
 
 ```php
+$base = WP_PLUGIN_DIR . "/wordpress-custom-schema";
 
+// Bases classes for post types and field groups
+require_once($base . "/WCS_Type.php");
+require_once($base . "/WCS_Group.php");
 
+// Require fields classes
+require_once($base . "/fields/WCS_Textfield.php");
+require_once($base . "/fields/WCS_Dropdown.php");
+require_once($base . "/fields/WCS_Radiobutton.php"); 
+
+// Define schema
+(new WCS_Type("advanced-custom-post"))
+        ->setArgs([
+            'label' => 'My Advanced Custom post',
+            'public' => true,
+            'show_ui' => true,
+            'show_in_rest' => true
+        ])        
+        ->addGroups([
+            (new WCS_Group("demo-group"))
+                ->setName("My first Demo Group")
+                ->setDescription("Make a looooong field group description ....")
+                ->addFields([
+                        (new WCS_Textfield("text-field"))
+                            ->setName("Text field")
+                            ->setDescription("Text field helper")
+                            ->setPosition(1, 3),
+                        (new WCS_Numericfield("numeric-field"))
+                            ->setName("Number field")
+                            ->setDescription("Number field helper")
+                            ->setPosition(4, 6),
+                        (new WCS_Emailfield("email-field"))
+                            ->setName("Email field")
+                            ->setDescription("email field helper")
+                            ->setPosition(7, 12),
+                        (new WCS_Passwordfield("password-field"))
+                            ->setName("Password field")
+                            ->setDescription("Password field helper")
+                            ->setPosition(12, 24),
+                        (new WCS_Textarea("textarea-field"))
+                            ->setName("Textarea field")
+                            ->setDescription("Textarea field helper")
+                            ->setPosition(24, 30),
+                        (new WCS_Dropdown("dropdown-field"))
+                            ->setName("Select field")
+                            ->setDescription("Select field helper")
+                            ->setOptions([1 => "first", 2 => "SEcond"])
+                            ->setPosition(31, 36),
+                        (new WCS_Checkbox("checkbox-field"))
+                            ->setName("Checkbox field")
+                            ->setDescription("Checkbox field helper")
+                            ->setPosition(37, 48),
+                        (new WCS_Radiobutton("radio-button-group"))
+                            ->setName("Radio field headline here")
+                            ->setDescription("Radio field helper") 
+                            ->setOptions([1 => "first", 2 => "SEcond"]) 
+                            ->setPosition(48, 60)
+                    ]),
+            (new WCS_Group("second-demo-group"))
+                ->setName("My Second Demo Group")
+                ->setDescription("Make a looooong field group description again ...")
+                ->addFields([
+                    (new WCS_Textfield("text-field-sec"))
+                        ->setName("Text field")
+                        ->setDescription("Text field helper")
+                        ->setPosition(1, 3),
+                    (new WCS_Numericfield("numeric-field-sec"))
+                        ->setName("Number field")
+                        ->setDescription("Number field helper")
+                        ->setPosition(4, 6),
+                    (new WCS_Emailfield("email-field-sec"))
+                        ->setName("Email field")
+                        ->setDescription("email field helper")
+                        ->setPosition(7, 12),
+                    (new WCS_Passwordfield("password-field-sec"))
+                        ->setName("Password field")
+                        ->setDescription("Password field helper")
+                        ->setPosition(12, 24),                
+                ])
+        ])->hook();
 ```
