@@ -69,9 +69,23 @@
 
                     add_action("add_meta_boxes_{$type}", function() use ($type) {
                         
-                        add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');        
+                        add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');                                                 
 
                     });
+
+                    foreach( $this->fields as $field ){
+
+                        add_action("init", function() use ($field, $type) {
+
+                            register_meta('post', $field->key, [
+                                'object_subtype' => $type,
+                                'description' => $field->description,
+                                'show_in_rest' => true
+                            ]);
+
+                        });
+
+                    }
 
                 }
 
@@ -210,7 +224,7 @@
             return "
                 <div class='wp-admin-bootstrap'> 
                     <p class='mb-4'>{$this->description}</p>
-                    {$grid}                
+                    {$grid}                       
                 </div>
             ";
         }

@@ -4,8 +4,11 @@
         exit;
     }
 
+    require_once(ABSPATH . "/wp-includes/class-wp-post-type.php");
+
     class WCS_Type
     {
+        
         /**
          * Post type system reference.
          * Must not exceed 20 characters and may only contain lowercase alphanumeric characters, dashes, and underscores.
@@ -15,6 +18,13 @@
         protected $key;
 
         /**
+         * Arguments passed to register_post_type
+         *
+         * @var array
+         */
+        protected $args = [];
+
+        /**
          * Array of Wordpress Meta boxes that containts fields
          * Must be instances of the WCSGroup class
          *
@@ -22,12 +32,92 @@
          */
         protected $groups = [];
 
+        /**
+         * Post type keys already created in the Wordpress Core
+         *
+         * @var array
+         */
+        private $reserved_keys = ['post','page','attachment','revision','nav_menu_item','custom_css','customize_changeset','oembed_cache','user_request','wp_block','action','author','order','theme'];
 
-        public function __construct() {}
+        /**
+         * Set the post type key
+         *
+         * @param string $key
+         */
+        public function __construct( string $key, array $args = [] )
+        {
+            if( $this->validateKey($key) ) {
+                
+                $this->key = $key;
+                $this->args = $args;
 
-        public function hook() : bool {}
+            } else {
+                // @todo throw exception
+            }           
+
+            return $this;
+        }
+
+        /**
+         * Set or update and argument
+         *
+         * @param string $key
+         * @param [type] $value
+         * @return void
+         */
+        public function setArgs( string $key, $value )
+        {
+            $this->args[$key] = $value;
+
+            return $this;
+        }
+
+        /**
+         * Hook into the wordpress eco-system and register post-type
+         * along all its groups that will render the custom fields
+         *
+         * @return boolean
+         */
+        public function hook() : bool
+        {
+            if( get_post_type_object($this->key) === null ) {
+
+                register_post_type($this->key, $this->args);
+
+            }
+
+            // Hook each group into the current post type
+            foreach( $this->groups as $group ) {
+
+                $group->setPostTypes($this->key);
+
+                $group->hook();
+
+            }
+
+            return true;
+        }
         
-        public function addGroups( $groups ) {}
+        /**
+         * Add one or more instances of WCS_Group
+         *
+         * @param [type] $groups
+         * @return void
+         */
+        public function addGroups( $groups )
+        {
+            $groups = is_array($groups) ? $groups : [$groups];
+
+            foreach( $groups as $group ) {
+                if( is_a($group, "WCS_Group") ) {
+                    $this->groups[$group->key] = $group;
+                } else {
+                    // @todo throw exception
+                }
+            }
+
+            return $this;
+        }
 
         /**
          * Function to validate key according to the requiements put up by

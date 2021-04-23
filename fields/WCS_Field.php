@@ -113,13 +113,13 @@
          * @return integer
          */
         public function save( int $post_id, $post = null ) : int
-        {            
-            $valid = is_callable($this->validator) ? $this->validator($_POST[$this->key]) : true;
-            $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]); 
-            
-            if( current_user_can("edit_post", $post_id) && $valid && !wp_is_post_autosave($post_id) && wp_verify_nonce($_POST[$this->getNonceName()]) ) {
+        {                                    
+            if( current_user_can("edit_post", $post_id) && array_key_exists($this->getNonceName(), $_POST) && wp_verify_nonce($_POST[$this->getNonceName()]) ) {
 
-                if( function_exists("update_post_meta") ) {
+                $valid = is_callable($this->validator) ? $this->validator($_POST[$this->key]) : true;
+                $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]);
+
+                if( function_exists("update_post_meta") && $valid ) {
                     update_post_meta($post_id, $this->key, $sanitized);
                 }
 
@@ -150,11 +150,17 @@
          * @param integer $object_id
          * @return void
          */
-        public function getValue( int $object_id = 0 )
+        public function getValue( int $object_id = 0 ) : string
         {
-            $object_id = empty($object_id) ? get_the_ID() : $object_id;
+            if( function_exists("add_action") && function_exists("get_metadata") ) {
+                
+                $object_id = empty($object_id) ? get_the_ID() : $object_id;
 
-            return get_metadata( 'post', $object_id, $this->key, true);
+                return get_metadata( 'post', $object_id, $this->key, true);
+
+            }
+            
+            return "";
         }
 
         /**
