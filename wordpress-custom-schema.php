@@ -46,7 +46,7 @@
 
             $iterator = new RecursiveDirectoryIterator($schema_location);
 
-            foreach(new RecursiveIteratorIterator($iterator) as $schema_file) {
+            foreach(new RecursiveIteratorIterator($iterator) as $schema_file ) {
                 
                 if( $schema_file->getExtension() == 'php' ) {
 
