@@ -61,19 +61,23 @@
          *
          * @return void
          */
-        public function activate()
+        public function hook()
         {
             if( function_exists("add_action") ) {
 
-                return add_action("add_meta_boxes", function(){
-                    
-                    add_meta_box($this->key, $this->name, [$this, "output"], $this->post_types, 'normal', 'default');        
+                foreach( $this->post_types as $type ) {
 
-                });
+                    add_action("add_meta_boxes_{$type}", function(){
+                        
+                        add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');        
+
+                    });
+
+                }
 
             }
 
-            return false;
+            return true;
         }
 
         /**
@@ -170,7 +174,7 @@
          * @param [type] $post
          * @return string
          */
-        public function render( $post ) : string
+        public function render( $post = null ) : string
         {
             $grid = $this->renderGrid(array_map(function($field) use ($post) {
 
