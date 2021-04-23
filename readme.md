@@ -26,8 +26,8 @@ You need access to your webhost through FTP or similar protocols.
 3) Unpack .zip on your local computer
 4) Upload content of the folder to path on server you created in step 2.
 
-### Creating your first schema file
-#### Simple example
+## Examples
+### Simple example
 One post type with a single group containing 1 field. Demonstrates the most basic principle of the WCS system.
 
 ```php
@@ -49,7 +49,9 @@ $type = (new WCS_Type('my-custom-post')
             ->addGroups($group)
             ->hook() // Tell wordpress to render this schema
 ```
+### Advanced Example
 
-#### Advanced Example
+```php
 
-`asdsad`
+
+```
