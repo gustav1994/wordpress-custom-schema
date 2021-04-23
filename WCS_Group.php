@@ -94,6 +94,8 @@
             foreach( $types as $type ) {
                 if( $this->validateKey($type) ) {
                     $this->post_types[] = $type;
+                } else {
+                    // @todo throw validation exception
                 }
             }
 
@@ -110,7 +112,9 @@
         {
             if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name ) {
                 $this->name = $name;
-            }            
+            } else {
+                // @todo throw validation exception
+            }         
 
             return $this;
         }
@@ -123,7 +127,11 @@
          */
         public function setDescription( string $description )
         {
-            $this->description = $description;
+            if( strip_tags($description) == $description ) {
+                $this->description = $description;
+            } else {
+                // @todo throw validation exception
+            }
 
             return $this;
         }
@@ -139,7 +147,11 @@
             $fields = is_array($fields) ? $fields : [$fields];
 
             foreach( $fields as $field ) {
-                $this->fields[$field->key] = $field;
+                if( is_subclass_of($field, "WCS_Field") ) {
+                    $this->fields[$field->key] = $field;
+                } else {
+                    // @todo throw validation exception
+                }
             }     
             
             // Sort by the start_position ascending. Empty starts positions go in the bottom
