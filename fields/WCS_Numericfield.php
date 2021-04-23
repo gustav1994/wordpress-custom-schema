@@ -19,7 +19,7 @@
         {
             return "
                 <label for='{$this->element_id}' class='form-label'>{$this->name}</label>
-                <input type='number' min='{$this->min}' max='{$this->max}' id='{$this->element_id}' name='{$this->key}' class='form-control' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}'>
+                <input type='number' min='{$this->min}' max='{$this->max}' id='{$this->element_id}' name='{$this->key}' class='form-control' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}'  value='{$this->getValue()}'>
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
                 {$this->getNonceField()}
             ";

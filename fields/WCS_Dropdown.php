@@ -23,7 +23,7 @@
 
             foreach($this->options as $key => $value) {
 
-                $options_arr[] = "<option value='{$key}'>{$value}</option>";
+                $options_arr[] = "<option value='{$key}' {$this->selected($key)}>{$value}</option>";
 
             }
 

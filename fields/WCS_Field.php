@@ -99,6 +99,8 @@
                     add_action('save_post', [$this, "save"]);
                 }
 
+            } else {
+                // @todo throw validation exception
             }
 
             return $this;
@@ -142,6 +144,20 @@
         }
 
         /**
+         * Retrive the value(s) currently in the database for a specific object_id
+         * Object_id will most properly be the post_id
+         *
+         * @param integer $object_id
+         * @return void
+         */
+        public function getValue( int $object_id = 0 )
+        {
+            $object_id = empty($object_id) ? get_the_ID() : $object_id;
+
+            return get_metadata( 'post', $object_id, $this->key, true);
+        }
+
+        /**
          * Override the element id for the input/select field
          *
          * @param string $id
@@ -162,7 +178,11 @@
          */
         public function setName( string $name )
         {
-            $this->name = $name;
+            if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name) {
+                $this->name = $name;
+            } else {
+                // @todo throw validation exception
+            }
 
             return $this;
         }
@@ -175,7 +195,11 @@
          */
         public function setDescription( string $description )
         {
-            $this->description = $description;
+            if( strip_tags($description) == $description ) {
+                $this->description = $description;
+            } else {
+                // @todo throw validation exception
+            }
 
             return $this;
         }
@@ -192,11 +216,13 @@
         {
             $length = $end - $start;
 
-            if( $length <= 12 && $length > 0 ) {
+            if( $length <= 12 && $length > 0 && $start <= $end && $start > 0 ) {
 
                 $this->start_position = $start;
                 $this->end_position = $end;
 
+            } else {
+                // @todo throw validation exception
             }
 
             return $this;
@@ -212,6 +238,8 @@
         {
             if( is_callable($callable) ) {
                 $this->sanitizer = $callable;
+            } else {
+                // @todo throw validation exception
             }
 
             return $this;
@@ -227,6 +255,8 @@
         {
             if( is_callable($callable) ) {
                 $this->validator = $callable;
+            } else {
+                // @todo throw validation exception
             }
 
             return $this;
@@ -265,6 +295,34 @@
         protected function validateKey( $key ) : bool
         {
             return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
+        }
+
+        /**
+         * Placeholder for built-in wordpress "checked function"
+         *
+         * @param mixed $compare
+         * @param mixed $value
+         * @return string
+         */
+        protected function checked( $compare, $value = null ) : string
+        {
+            $value = empty($value) ? $this->getValue() : $value;
+
+            return $compare == $value ? "checked='true'" : "";
+        }
+
+        /**
+         * Placeholder for the wordpress built-in selected
+         *
+         * @param mixed $compare
+         * @param mixed $value
+         * @return string
+         */
+        protected function selected( $compare, $value = null) : string
+        {
+            $value = empty($value) ? $this->getValue() : $value;
+
+            return $compare == $value ? "selected='true'" : "";
         }
 
         /**

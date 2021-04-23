@@ -22,28 +22,12 @@
          */
         protected $groups = [];
 
-        /**
-         * Define the custom post type name along with it's arguments.
-         * Will register new post type if it not already exists
-         *
-         * @param string $name
-         * @param array $args
-         */
-        public function __construct( string $key )
-        {          
-            return $this;
-        }
 
-        /**
-         * 1. Create post-type if it does not exists
-         * 2. 
-         *
-         * @return void
-         */
-        public function activate()
-        {
+        public function __construct() {}
 
-        }
+        public function hook() : bool {}
+        
+        public function addGroups( $groups ) {}
 
         /**
          * Function to validate key according to the requiements put up by

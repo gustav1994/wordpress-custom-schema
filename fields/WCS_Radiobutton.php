@@ -25,7 +25,7 @@
 
                 $checkboxes .= "
                     <div class='form-check'>
-                        <input class='form-check-input' type='radio' name='{$this->key}' id='{$this->element_id}-{$key}' />
+                        <input class='form-check-input' type='radio' name='{$this->key}' id='{$this->element_id}-{$key}' value='{$key}' {$this->checked($key)} />
                         <label class='form-check-label' for='{$this->element_id}-{$key}'>{$value}</label>
                     </div>                
                 ";
