@@ -6,8 +6,6 @@ WCS is inspired by migration terminology used in popular frameworks such as Lara
 **Wordpress Custom Schema (WCS) will not alter any database tables.**
 
 ## Terminology and plugin structure
-
-
 ### File structure
 `/schema` Home for all your igration files. If your are using this in a Wordpress Multisite (WPMU) setup please seperate schema files in folders matching blog id's or domain names. Schema files in the root will run for all sites in the network.
 
@@ -16,10 +14,10 @@ WCS is inspired by migration terminology used in popular frameworks such as Lara
 * `post_type.php` *Custom post type object.*
 * `wordpress-custom-schema.php` *Main plugin file. Will determine what schema files to load depending on the wordpress configuration.*
 
+### Field position system
 ## How to get started
 WCS is not hosted in the official Wordpress Plugin channel. This plugin is soley intended to be used
 by secious web programmers building enterprise websites backed by Wordpress. This plugin cannot be used without any programming knowledge. There are other alternatives out there that we can recommend if you are looking for an interface to manage custom- types and fields: [Advanced Custom Fields (ACF)](https://advancedcustomfields.com) og [Toolset](http://toolset.com) are among the most popular.
-
 ### Installation
 You need access to your webhost through FTP or similar protocols.
 
@@ -29,3 +27,29 @@ You need access to your webhost through FTP or similar protocols.
 4) Upload content of the folder to path on server you created in step 2.
 
 ### Creating your first schema file
+#### Simple example
+One post type with a single group containing 1 field. Demonstrates the most basic principle of the WCS system.
+
+```php
+require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/WCS_Type.php");
+require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/WCS_Group.php");
+require_once(WP_PLUGIN_DIR . "/wordpress-custom-schema/fields/WCS_Textfield.php");    
+
+$txt = (new WCS_textfield('my-text-field'))
+            ->setName('This is the label');
+
+$group = (new WCS_Group('my-first-group'))
+            ->addField($txt);
+
+$type = (new WCS_Type('my-custom-post')
+            ->setArgs('label', 'My Custom Post')
+            ->setArgs('public', true)
+            ->setArgs('show_ui', true)
+            ->setArgs('show_in_test', true);
+            ->addGroups($group)
+            ->hook() // Tell wordpress to render this schema
+```
+
+#### Advanced Example
+
+`asdsad`
