@@ -77,6 +77,8 @@
 
                     foreach( $this->fields as $field ){
 
+                        $field->hook();
+
                         add_action("init", function() use ($field, $type) {
 
                             register_meta('post', $field->key, [

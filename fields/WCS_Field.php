@@ -93,11 +93,7 @@
             if( $this->validateKey($key) ) {
                 
                 $this->key = $key;
-                $this->element_id = "WCS-{$this->randomString(5, 10)}";
-
-                if( function_exists("add_action") ) {
-                    add_action('save_post', [$this, "save"]);
-                }
+                $this->element_id = "WCS-{$this->randomString(5, 10)}";               
 
             } else {
                 throw new Exception("Invalid field key format");
@@ -127,6 +123,20 @@
             
             return $post_id;
         }  
+
+        /**
+         * Hook into wordpress sytem
+         *
+         * @return void
+         */
+        public function hook()
+        {
+            if( function_exists("add_action") ) {
+                add_action('save_post', [$this, "save"]);
+            }
+
+            return true;
+        }
         
         /**
          * Just so wordpress can use this class
