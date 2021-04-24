@@ -13,8 +13,15 @@ WCS is inspired by migration terminology used in popular frameworks such as Lara
 * `/fields` *holds all fields type that you can use to define custom fields. Each class corresponds to a different form element and is therefore rendered in different ways.*
 * `post_type.php` *Custom post type object.*
 * `wordpress-custom-schema.php` *Main plugin file. Will determine what schema files to load depending on the wordpress configuration.*
-
 ### Field position system
+WCS uses the Twitter Bootstrap system to style everything in the wordpress meta box. In order to position fields in the group we will span use the Bootstrap grid system to span out a grid width 12 columns width. Positions will count from upper left corner and then break on 12, 24, 36 ... 72. Fields sorted ascending on the start position and can not overlap and break lines. 
+
+| 1  | 2  | 3  | 4  | ... | 12 |
+|----|----|----|----|-----|----|
+| 13 | 14 | 15 | 16 | ... | 24 |
+| 25 | 26 | 27 | 28 | ... | 36 |
+| .  | .  | .  | .  | ... | .  |
+
 ## How to get started
 WCS is not hosted in the official Wordpress Plugin channel. This plugin is soley intended to be used
 by secious web programmers building enterprise websites backed by Wordpress. This plugin cannot be used without any programming knowledge. There are other alternatives out there that we can recommend if you are looking for an interface to manage custom- types and fields: [Advanced Custom Fields (ACF)](https://advancedcustomfields.com) og [Toolset](http://toolset.com) are among the most popular.
