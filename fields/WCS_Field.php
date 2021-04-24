@@ -100,7 +100,7 @@
                 }
 
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid field key format");
             }
 
             return $this;
@@ -187,7 +187,7 @@
             if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name) {
                 $this->name = $name;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid field name format");
             }
 
             return $this;
@@ -204,7 +204,7 @@
             if( strip_tags($description) == $description ) {
                 $this->description = $description;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid description format. Not HTML tags.");
             }
 
             return $this;
@@ -228,7 +228,7 @@
                 $this->end_position = $end;
 
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid positions");
             }
 
             return $this;
@@ -245,7 +245,7 @@
             if( is_callable($callable) ) {
                 $this->sanitizer = $callable;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid sanitizer function. Not callable.");
             }
 
             return $this;
@@ -262,7 +262,7 @@
             if( is_callable($callable) ) {
                 $this->validator = $callable;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid validator function. Not callable.");
             }
 
             return $this;

@@ -4,8 +4,6 @@
         exit;
     }
 
-    require_once(ABSPATH . "/wp-includes/class-wp-post-type.php");
-
     class WCS_Type
     {
         
@@ -50,9 +48,11 @@
                 
                 $this->key = $key;
                 $this->args = $args;
-
+                
             } else {
-                // @todo throw exception
+
+                throw new Exception("Invalid key-format");
+
             }           
 
             return $this;
@@ -116,7 +116,7 @@
                 if( is_a($group, "WCS_Group") ) {
                     $this->groups[$group->key] = $group;
                 } else {
-                    // @todo throw exception
+                    throw new Exception("Group must inherit the WCS Group class");
                 }
             }
 

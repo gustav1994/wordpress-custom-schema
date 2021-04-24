@@ -51,6 +51,8 @@
         {
             if( $this->validateKey($key) ) {
                 $this->key = $key;                
+            } else {
+                throw new Exception("Invalid group key.");
             }
 
             return $this;
@@ -109,7 +111,7 @@
                 if( $this->validateKey($type) ) {
                     $this->post_types[] = $type;
                 } else {
-                    // @todo throw validation exception
+                    throw new Exception("The post type key is invalid");
                 }
             }
 
@@ -127,7 +129,7 @@
             if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name ) {
                 $this->name = $name;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Invalid name format");
             }         
 
             return $this;
@@ -144,7 +146,7 @@
             if( strip_tags($description) == $description ) {
                 $this->description = $description;
             } else {
-                // @todo throw validation exception
+                throw new Exception("Avoid HTML tags in description");
             }
 
             return $this;
@@ -164,7 +166,7 @@
                 if( is_subclass_of($field, "WCS_Field") ) {
                     $this->fields[$field->key] = $field;
                 } else {
-                    // @todo throw validation exception
+                    throw new Exception("Fields must inherit the WCS_Field parent class");
                 }
             }     
             
