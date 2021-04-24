@@ -339,9 +339,17 @@
          * @param mixed $value
          * @return string
          */
-        protected function checked( $compare, $value = null ) : string
+        protected function checked( $compare, $value = null, bool $echo = false ) : string
         {
             $value = empty($value) ? $this->getValue() : $value;
+
+            if( function_exists('checked') ) {
+                return checked($compare, $value, $echo);
+            }
+
+            if( $echo ) {
+                echo $compare == $value ? "checked='true'" : "";
+            }
 
             return $compare == $value ? "checked='true'" : "";
         }
@@ -353,9 +361,17 @@
          * @param mixed $value
          * @return string
          */
-        protected function selected( $compare, $value = null) : string
+        protected function selected( $compare, $value = null, bool $echo = false) : string
         {
             $value = empty($value) ? $this->getValue() : $value;
+
+            if( function_exists("selected") ) {
+                return selected($compare, $value, $echo);
+            }
+
+            if( $echo ){
+                echo $compare == $value ? "selected='true'" : "";
+            }
 
             return $compare == $value ? "selected='true'" : "";
         }
