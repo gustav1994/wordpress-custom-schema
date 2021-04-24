@@ -31,6 +31,13 @@
         protected $groups = [];
 
         /**
+         * Keep state of the hook int WP
+         *
+         * @var boolean
+         */
+        protected $hooked = false;
+
+        /**
          * Post type keys already created in the Wordpress Core
          *
          * @var array
@@ -82,21 +89,35 @@
          *
          * @return boolean
          */
-        public function hook() : bool
-        {
-            if( get_post_type_object($this->key) === null ) {
+        public function hook( bool $force = false ) : bool
+        {   
+            if( function_exists("register_post_type") && function_exists('get_post_type_object') ) {            
 
-                register_post_type($this->key, $this->args);
+                if( $this->hooked == false || $force ) {
 
-            }
+                    if( get_post_type_object($this->key) === null ) {
 
-            // Hook each group into the current post type
-            foreach( $this->groups as $group ) {
+                        register_post_type($this->key, $this->args);
 
-                $group->setPostTypes($this->key);
+                    }
 
-                $group->hook();
+                    // Hook each group into the current post type
+                    foreach( $this->groups as $group ) {
 
+                        $group->setPostTypes($this->key);
+
+                        $group->hook();
+
+                    }
+
+                    $this->hooked = true;
+
+                } else {
+                    throw new Exception("Type was already hooked into Wordpress");
+                }
+
+            } else {
+                throw new Exception("Wordpress functions register_post_type() and get_post_type_object was not available");
             }
 
             return true;

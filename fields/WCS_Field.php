@@ -67,6 +67,13 @@
          * @return int
          */
         public $end_position;
+
+        /**
+         * If we ahve already hooked into the WP eco-system
+         *
+         * @var boolean
+         */
+        protected $hooked = false;
         
         /**
          * Enforce sub-classes to implement a rendering method
@@ -129,10 +136,22 @@
          *
          * @return void
          */
-        public function hook()
+        public function hook( bool $force = false )
         {
-            if( function_exists("add_action") ) {
-                add_action('save_post', [$this, "save"]);
+            if( function_exists("add_action") && ($this->hooked == false || $force) ) {
+                
+                if( $this->hooked == false || $force ) {
+                
+                    add_action('save_post', [$this, "save"]);
+
+                    $this->hooked = true;
+
+                } else {
+                    throw new Exception("This field was already hooked into Wordpress Ecosystem");
+                }
+
+            } else {
+                throw new Exception("Wordpress add_action function was not available");
             }
 
             return true;

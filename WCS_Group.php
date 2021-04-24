@@ -43,6 +43,13 @@
         protected $fields = [];
 
         /**
+         * If already hooked into WP ecosystem
+         *
+         * @var boolean
+         */
+        protected $hooked = false;
+
+        /**
          * Initiate the field group and tell wordpress when to hook into
          * 
          * @var string $key
@@ -63,36 +70,45 @@
          *
          * @return void
          */
-        public function hook() : bool
+        public function hook( bool $hooked = false ) : bool
         {
             if( function_exists("add_action") ) {
 
                 foreach( $this->post_types as $type ) {
 
-                    add_action("add_meta_boxes_{$type}", function() use ($type) {
-                        
-                        add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');                                                 
+                    if( $this->hooked == false || $force ) {
 
-                    });
-
-                    foreach( $this->fields as $field ){
-
-                        $field->hook();
-
-                        add_action("init", function() use ($field, $type) {
-
-                            register_meta('post', $field->key, [
-                                'object_subtype' => $type,
-                                'description' => $field->description,
-                                'show_in_rest' => true
-                            ]);
+                        add_action("add_meta_boxes_{$type}", function() use ($type) {
+                            
+                            add_meta_box($this->key, $this->name, [$this, "output"], $type, 'normal', 'default');                                                 
 
                         });
 
+                        foreach( $this->fields as $field ){
+
+                            $field->hook();
+
+                            add_action("init", function() use ($field, $type) {
+
+                                register_meta('post', $field->key, [
+                                    'object_subtype' => $type,
+                                    'description' => $field->description,
+                                    'show_in_rest' => true
+                                ]);
+
+                            });
+
+                            $this->hooked = true;
+                        }
+
+                    } else {
+                        throw new Exception("Group was already hooked into Wordpress ecosystem");
                     }
 
                 }
 
+            } else {
+                throw new Exception("WP function add_action was not avalable");
             }
 
             return true;
