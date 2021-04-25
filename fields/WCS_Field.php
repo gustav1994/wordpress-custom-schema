@@ -177,10 +177,40 @@
 
                             add_action("save_post_{$type}", [$this, "save"]);
 
+                            add_filter("manage_{$type}_posts_columns", function( $columns ){
+
+                                $columns[$this->key] = __($this->name);
+
+                                return $columns;
+                            });
+
+                            // @todo according to wp documentation hook should recieve the post_id as second parameter. But seems not to be the case 
+                            add_action("manage_{$type}_posts_custom_column", function( string $column ){
+                                if( $column == $this->key) {
+                                    echo $this->getValue();
+                                }
+                            });
+
                         }                        
 
                     } else {
+                        
                         add_action('save_post', [$this, "save"]);
+
+                        add_filter("manage_posts_columns", function( $columns ){
+
+                            $columns[$this->key] = __($this->name);
+                            
+                            return $columns;
+                        });
+
+                        // @todo according to wp documentation hook should recieve the post_id as second parameter. But seems not to be the case 
+                        add_action("manage_posts_custom_column", function( string $column ){
+                            if( $column == $this->key) {
+                                echo $this->getValue();
+                            }
+                        });
+
                     }
 
                     $this->hooked = true;
@@ -220,7 +250,7 @@
          */
         public function getValue( int $object_id = 0 ) : string
         {
-            if( function_exists("add_action") && function_exists("get_metadata") ) {
+            if( function_exists("get_metadata") ) {
                 
                 $object_id = empty($object_id) ? get_the_ID() : $object_id;
 
