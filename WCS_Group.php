@@ -86,6 +86,8 @@
 
                         foreach( $this->fields as $field ){
 
+                            $field->setPostTypes($this->post_types);
+                            
                             $field->hook();
 
                             add_action("init", function() use ($field, $type) {

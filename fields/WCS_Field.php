@@ -49,6 +49,13 @@
         protected $validator;
 
         /**
+         * What post types to hook into
+         *
+         * @var array
+         */
+        protected $post_types = [];
+
+        /**
          * Utilizes the Bootstrap grid system this will be the start position
          * in a 12 width grid system.
          * 
@@ -132,6 +139,28 @@
         }  
 
         /**
+         * Define what post-types we should activate 
+         * this group for
+         *
+         * @param [type] $types
+         * @return void
+         */
+        public function setPostTypes( $types )
+        {
+            $types = is_array($types) ? $types : [$types];
+
+            foreach( $types as $type ) {
+                if( $this->validateKey($type) ) {
+                    $this->post_types[] = $type;
+                } else {
+                    throw new Exception("The post type key is invalid");
+                }
+            }
+
+            return $this;
+        }
+
+        /**
          * Hook into wordpress sytem
          *
          * @return void
@@ -141,8 +170,18 @@
             if( function_exists("add_action") && ($this->hooked == false || $force) ) {
                 
                 if( $this->hooked == false || $force ) {
-                
-                    add_action('save_post', [$this, "save"]);
+
+                    if( count($this->post_types) ) { 
+                        
+                        foreach( $this->post_types as $type ) {
+
+                            add_action("save_post_{$type}", [$this, "save"]);
+
+                        }                        
+
+                    } else {
+                        add_action('save_post', [$this, "save"]);
+                    }
 
                     $this->hooked = true;
 
