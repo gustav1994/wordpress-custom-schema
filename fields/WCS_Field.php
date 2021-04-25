@@ -162,7 +162,8 @@
 
         /**
          * Hook into wordpress sytem
-         *
+         
+         * @todo split up logic into several separate functions
          * @return void
          */
         public function hook( bool $force = false )
