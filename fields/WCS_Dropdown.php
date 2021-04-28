@@ -33,6 +33,7 @@
                     ". implode("", $options_arr) . "
                 </select>
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                
                 {$this->getNonceField()}
             ";
 

@@ -36,6 +36,7 @@
                 <label class='mb-1'>{$this->name}</label>
                 {$checkboxes}                
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                
                 {$this->getNonceField()}
             ";
 

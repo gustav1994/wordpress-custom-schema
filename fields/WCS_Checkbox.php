@@ -11,6 +11,7 @@
                 <input type='checkbox' id='{$this->element_id}' class='form-check-input' name='{$this->key}' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}' value='1' {$this->checked(1)}>
                 <label for='{$this->element_id}' class='form-check-label'>{$this->name}</label>                
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                
                 {$this->getNonceField()}
             ";
 
