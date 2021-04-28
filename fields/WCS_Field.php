@@ -76,6 +76,13 @@
         public $end_position;
 
         /**
+         * Should field be visible as column in Post-Type overview
+         *
+         * @var boolean
+         */
+        public $visible_column = false;
+
+        /**
          * If we ahve already hooked into the WP eco-system
          *
          * @var boolean
@@ -168,65 +175,109 @@
          */
         public function hook( bool $force = false )
         {
-            if( function_exists("add_action") && ($this->hooked == false || $force) ) {
+            try {
                 
-                if( $this->hooked == false || $force ) {
+                $this->hookSave( $force );
 
-                    if( count($this->post_types) ) { 
-                        
-                        foreach( $this->post_types as $type ) {
+                if( $this->visible_column ) {
 
-                            add_action("save_post_{$type}", [$this, "save"]);
+                    $this->hookVisibleColumn( $force );
 
-                            add_filter("manage_{$type}_posts_columns", function( $columns ){
-
-                                $columns[$this->key] = __($this->name);
-
-                                return $columns;
-                            });
-
-                            // @todo according to wp documentation hook should recieve the post_id as second parameter. But seems not to be the case 
-                            add_action("manage_{$type}_posts_custom_column", function( string $column ){
-                                if( $column == $this->key) {
-                                    echo $this->getValue();
-                                }
-                            });
-
-                        }                        
-
-                    } else {
-                        
-                        add_action('save_post', [$this, "save"]);
-
-                        add_filter("manage_posts_columns", function( $columns ){
-
-                            $columns[$this->key] = __($this->name);
-                            
-                            return $columns;
-                        });
-
-                        // @todo according to wp documentation hook should recieve the post_id as second parameter. But seems not to be the case 
-                        add_action("manage_posts_custom_column", function( string $column ){
-                            if( $column == $this->key) {
-                                echo $this->getValue();
-                            }
-                        });
-
-                    }
-
-                    $this->hooked = true;
-
-                } else {
-                    throw new Exception("This field was already hooked into Wordpress Ecosystem");
                 }
 
-            } else {
-                throw new Exception("Wordpress add_action function was not available");
+                $this->hooked = true; // Only in hooked state if we successfully hooked into WP
+            
+            } catch( Exception $e ) {
+
+                throw $e;
+
             }
 
             return true;
         }
         
+        /**
+         * Hook into the column logic
+         * so admins can add columns to the post type view
+         *
+         * @param boolean $force
+         * @return void
+         */
+        protected function hookVisibleColumn( bool $force = false )
+        {
+            if( function_exists("add_action") && function_exists("add_filter") ) {
+
+                if( $this->hooked == false || $force ) {
+
+                    if( $this->visible_column || $force ) {
+
+                        $modifyColumnsArray = function( $columns ) {
+                            $columns[$this->key] = __($this->name);
+                            return $columns;
+                        };
+
+                        $echoFieldValue = function( string $column ) {                            
+                            return $this->getValue(0, true);                            
+                        };
+ 
+                        foreach( $this->post_types as $type ) {
+    
+                            add_filter("manage_{$type}_posts_columns", $modifyColumnsArray);    
+                            add_action("manage_{$type}_posts_custom_column", $echoFieldValue);
+    
+                        }
+        
+                        if( empty($this->post_types) ) {
+        
+                            add_filter("manage_posts_columns", $modifyColumnsArray);                            
+                            add_action("manage_posts_custom_column", $echoFieldValue);                    
+        
+                        }
+
+                    } else {
+                        throw new Exception("Field is not visible as column. Use setVisibleColumn(true) or force the hook");    
+                    }
+
+                } else {
+                    throw new Exception("Already hooed into WP");
+                }                            
+
+            } else {
+                throw new Exception("Wordpress add_action or add_filter function was not available or already hooked in");
+            }
+
+            return $this;
+        }
+
+        /**
+         * Hook into the save post wordpress filter
+         *
+         * @param boolean $force
+         * @return void
+         */
+        protected function hookSave( bool $force = false )
+        {
+            if( function_exists("add_action") && ($this->hooked == false || $force) ) {
+                
+                foreach( $this->post_types as $type ) {
+
+                    add_action("save_post_{$type}", [$this, "save"]);
+
+                }
+
+                if( empty($this->post_types) ) {
+
+                    add_action('save_post', [$this, "save"]);
+
+                }
+
+            } else {
+                throw new Exception("Wordpress add_action function was not available or already hooked in");
+            }
+            
+            return $this;
+        }
+
         /**
          * Just so wordpress can use this class
          *
@@ -249,14 +300,19 @@
          * @param integer $object_id
          * @return void
          */
-        public function getValue( int $object_id = 0 ) : string
+        public function getValue( int $object_id = 0, bool $echo = false ) : string
         {
-            if( function_exists("get_metadata") ) {
+            if( function_exists("get_metadata") && function_exists("get_the_ID") ) {
                 
                 $object_id = empty($object_id) ? get_the_ID() : $object_id;
+                
+                $value = get_metadata( 'post', $object_id, $this->key, true);
 
-                return get_metadata( 'post', $object_id, $this->key, true);
+                if( $echo ) {
+                    echo (string) $value;
+                }
 
+                return $value;
             }
             
             return "";
@@ -288,6 +344,20 @@
             } else {
                 throw new Exception("Invalid field name format");
             }
+
+            return $this;
+        }
+
+        /**
+         * Determine if field should be visible as column
+         * in the wp admin post-type interface
+         * 
+         * @param bool $value
+         * @return object
+         */
+        public function setVisibleColumn( bool $value )
+        {
+            $this->visible_column = $value;
 
             return $this;
         }
