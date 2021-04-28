@@ -178,11 +178,10 @@
             try {
                 
                 $this->hookSave( $force );
+                $this->hookRegisterField( $force );
 
                 if( $this->visible_column ) {
-
                     $this->hookVisibleColumn( $force );
-
                 }
 
                 $this->hooked = true; // Only in hooked state if we successfully hooked into WP
@@ -273,6 +272,41 @@
 
             } else {
                 throw new Exception("Wordpress add_action function was not available or already hooked in");
+            }
+            
+            return $this;
+        }
+
+        /**
+         * Register this field into wp
+         * 
+         * @param bool $force
+         * @return object
+         */
+        protected function hookRegisterField( bool $force = false )
+        {
+            if( function_exists("add_action") ) {
+
+                if( $this->hooked == false || $force ) {
+
+                    foreach( $this->post_types as $type ) {
+
+                        add_action("init", function() use ($type) {
+
+                            register_meta('post', $this->key, [
+                                'object_subtype' => $type,
+                                'description' => $this->description,
+                                'show_in_rest' => true
+                            ]);
+            
+                        });    
+
+                    }                    
+
+                } else {
+                    throw new Exception("Already hooked into WP");
+                }
+
             }
             
             return $this;

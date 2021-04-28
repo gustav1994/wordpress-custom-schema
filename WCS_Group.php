@@ -86,19 +86,8 @@
 
                         foreach( $this->fields as $field ){
 
-                            $field->setPostTypes($this->post_types);
-                            
-                            $field->hook();
-
-                            add_action("init", function() use ($field, $type) {
-
-                                register_meta('post', $field->key, [
-                                    'object_subtype' => $type,
-                                    'description' => $field->description,
-                                    'show_in_rest' => true
-                                ]);
-
-                            });
+                            $field->setPostTypes($this->post_types);                            
+                            $field->hook();                            
 
                             $this->hooked = true;
                         }
