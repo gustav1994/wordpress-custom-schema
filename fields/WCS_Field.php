@@ -137,7 +137,13 @@
                 $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]);
 
                 if( function_exists("update_post_meta") && $valid ) {
+
                     update_post_meta($post_id, $this->key, $sanitized);
+
+                } else {
+
+                    throw new Exception("Missing wp-functin update_post_meta");
+
                 }
 
             }   
@@ -184,7 +190,7 @@
                     $this->hookVisibleColumn( $force );
                 }
 
-                $this->hooked = true; // Only in hooked state if we successfully hooked into WP
+                $this->hooked = true;
             
             } catch( Exception $e ) {
 
@@ -328,28 +334,34 @@
         }
 
         /**
-         * Retrive the value(s) currently in the database for a specific object_id
-         * Object_id will most properly be the post_id
+         * Retrive value from current PHP Globals
+         * or whatever is stored in the database
          *
          * @param integer $object_id
          * @return void
          */
         public function getValue( int $object_id = 0, bool $echo = false ) : string
         {
-            if( function_exists("get_metadata") && function_exists("get_the_ID") ) {
-                
+            if( array_key_exists($this->key, $_REQUEST) ) {
+
+                $value = $_REQUEST[$this->key];
+
+            } elseif( function_exists("get_metadata") && function_exists("get_the_ID") ) {
+
                 $object_id = empty($object_id) ? get_the_ID() : $object_id;
-                
                 $value = get_metadata( 'post', $object_id, $this->key, true);
 
-                if( $echo ) {
-                    echo (string) $value;
-                }
+            } else {
 
-                return $value;
+                throw new Exception("WP functions get_metadata() and get_the_ID() unavailable");
+
             }
-            
-            return "";
+
+            if( $echo ) {
+                echo (string) $value;
+            }
+
+            return $value;            
         }
 
         /**
