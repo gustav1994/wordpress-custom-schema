@@ -16,7 +16,7 @@
 
         }
 
-        public function sanitize( $value )
+        public function sanitize( $value ) : bool
         {
             return boolval($value);
         }

@@ -26,7 +26,7 @@
 
         }
 
-        public function sanitize( $value )
+        public function sanitize( $value ) : float
         {
             return floatval($value);
         }

@@ -15,7 +15,7 @@
 
         }
 
-        public function sanitize( $value )
+        public function sanitize( $value ) : string
         {
             return sanitize_text_field($value);
         }
