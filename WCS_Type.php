@@ -38,13 +38,6 @@
         protected $hooked = false;
 
         /**
-         * Post type keys already created in the Wordpress Core
-         *
-         * @var array
-         */
-        private $reserved_keys = ['post','page','attachment','revision','nav_menu_item','custom_css','customize_changeset','oembed_cache','user_request','wp_block','action','author','order','theme'];
-
-        /**
          * Set the post type key
          *
          * @param string $key
