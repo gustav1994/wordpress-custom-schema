@@ -18,24 +18,18 @@
     add_action("init", function(){
 
         $path = plugin_dir_path(__FILE__);
-
+        
         $schema_locations = [$path . "schema/"];
 
         if( is_multisite() ) {
 
             $blog_id = get_current_blog_id();
 
-            $blog = get_blog_details($blog_id, false);
-
-            if( file_exists($path . "schema/{$blog_id}") ) {
-
-                $schema_locations[] = $path . "schema/{$blog_id}";
-
-            }
+            $blog = get_blog_details($blog_id, false);            
 
             if( !empty($blog->domain) && file_exists( $path . "schema/{$blog->domain}") ) {
 
-                $schema_locations[] = $path . "schema/{$blog->domain}";
+                $schema_locations[] = $path . "schema/{$blog->domain}/";
 
             }
 
@@ -44,13 +38,13 @@
         // Load schema files from all locations
         foreach( $schema_locations as $schema_location ) {
 
-            $iterator = new RecursiveDirectoryIterator($schema_location);
+            foreach( scandir($schema_location) as $file ) {
 
-            foreach(new RecursiveIteratorIterator($iterator) as $schema_file ) {
-                
-                if( $schema_file->getExtension() == 'php' ) {
+                $absPath = $schema_location . $file;
 
-                    include_once( $schema_file->getPathname() );
+                if( is_file($absPath) && substr($file, -4) === ".php" ) {
+
+                    include_once( $absPath );
 
                 }
 
