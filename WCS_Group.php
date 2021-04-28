@@ -88,9 +88,10 @@
 
                             $field->setPostTypes($this->post_types);                            
                             $field->hook();                            
-
-                            $this->hooked = true;
+                            
                         }
+
+                        $this->hooked = true;
 
                     } else {
                         throw new Exception("Group was already hooked into Wordpress ecosystem");
