@@ -279,7 +279,7 @@
                 if( $startPosition > $firstEmptyPosition ) {
 
                     for( $i = 0; $i < $startPosition - $firstEmptyPosition; $i++){
-                        $columns[] = "<div class='col-md-1'>&nbsp;</div>";
+                        $columns[] = "<div class='col-md-1 d-none d-md-block'>&nbsp;</div>";
                     }
                     
                 }
