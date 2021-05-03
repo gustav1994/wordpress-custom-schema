@@ -21,7 +21,7 @@
         
         $schema_locations = [$path . "schema/"];
 
-        if( is_multisite() ) {
+        if( is_multisite() && function_exists("get_blog_details") ) {
 
             $blog_id = get_current_blog_id();
 
