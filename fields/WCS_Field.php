@@ -21,6 +21,13 @@
         protected $name;
 
         /**
+         * Default field value if nothing has been set
+         *
+         * @var mixed
+         */
+        protected $default_value;        
+
+        /**
          * Input description
          *
          * @var string
@@ -114,7 +121,9 @@
             if( $this->validateKey($key) ) {
                 
                 $this->key = $key;
-                $this->element_id = "WCS-{$this->randomString(5, 10)}";               
+                $this->element_id = "WCS-{$this->randomString(5, 10)}"; 
+                
+                $this->default_value = '';              
 
             } else {
                 throw new Exception("Invalid field key format");
@@ -133,12 +142,22 @@
         {                                    
             if( current_user_can("edit_post", $post_id) && array_key_exists($this->getNonceName(), $_POST) && wp_verify_nonce($_POST[$this->getNonceName()]) ) {
 
-                $valid = is_callable($this->validator) ? $this->validator($_POST[$this->key]) : true;
-                $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($_POST[$this->key]) : $this->sanitize($_POST[$this->key]);
+                $value = $this->getValue();
+
+                $valid = is_callable($this->validator) ? $this->validator($value) : true;
+                $sanitized = is_callable($this->sanitizer) ? $this->sanitizer($value) : $this->sanitize($value);
 
                 if( function_exists("update_post_meta") && $valid ) {
 
-                    update_post_meta($post_id, $this->key, $sanitized);
+                    if( $value === '' || $value === null ) {
+
+                        update_post_meta($post_id, $this->key, $this->default_value);
+
+                    } else {
+
+                        update_post_meta($post_id, $this->key, $sanitized);
+
+                    }
 
                 } else {
 
@@ -350,11 +369,15 @@
 
                 $object_id = empty($object_id) ? get_the_ID() : $object_id;
                 $value = get_metadata( 'post', $object_id, $this->key, true);
-
+                
             } else {
 
                 throw new Exception("WP functions get_metadata() and get_the_ID() unavailable");
 
+            }
+
+            if( $value === '' || $value === null ) {
+                $value = $this->default_value;
             }
 
             if( $echo ) {
@@ -390,6 +413,19 @@
             } else {
                 throw new Exception("Invalid field name format");
             }
+
+            return $this;
+        }
+
+        /**
+         * Set default value
+         *
+         * @param mixed $value
+         * @return void
+         */
+        public function setDefaultValue( $value )
+        {
+            $this->default_value = $value;
 
             return $this;
         }
@@ -458,7 +494,9 @@
         public function setSanitizer( $callable )
         {
             if( is_callable($callable) ) {
+
                 $this->sanitizer = $callable;
+                
             } else {
                 throw new Exception("Invalid sanitizer function. Not callable.");
             }
@@ -475,7 +513,9 @@
         public function setValidator( $callable )
         {
             if( is_callable($callable) ) {
+
                 $this->validator = $callable;
+
             } else {
                 throw new Exception("Invalid validator function. Not callable.");
             }
