@@ -48,6 +48,8 @@
                 
                 $this->key = $key;
                 $this->args = $args;
+
+                $this->setArgs('supports', ['thumbnail']);
                 
             } else {
 
@@ -102,7 +104,7 @@
                         $group->hook();
 
                     }
-
+                    
                     $this->hooked = true;
 
                 } else {
