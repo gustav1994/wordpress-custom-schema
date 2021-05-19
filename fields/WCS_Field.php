@@ -240,21 +240,23 @@
                             return $columns;
                         };
 
-                        $echoFieldValue = function( string $column ) {                            
-                            return $this->getValue(0, true);                            
+                        $echoFieldValue = function( string $column, int $id) {                                                        
+                            if( $this->key == $column) {
+                                return $this->getValue($id, true);                            
+                            }                            
                         };
  
                         foreach( $this->post_types as $type ) {
     
                             add_filter("manage_{$type}_posts_columns", $modifyColumnsArray);    
-                            add_action("manage_{$type}_posts_custom_column", $echoFieldValue);
+                            add_action("manage_{$type}_posts_custom_column", $echoFieldValue, 10, 2);
     
                         }
         
                         if( empty($this->post_types) ) {
         
                             add_filter("manage_posts_columns", $modifyColumnsArray);                            
-                            add_action("manage_posts_custom_column", $echoFieldValue);                    
+                            add_action("manage_posts_custom_column", $echoFieldValue, 10, 2);                    
         
                         }
 
@@ -361,14 +363,14 @@
          */
         public function getValue( int $object_id = 0, bool $echo = false ) : string
         {
-            if( array_key_exists($this->key, $_REQUEST) ) {
+            if( array_key_exists($this->key, $_REQUEST) ) {                
 
                 $value = $_REQUEST[$this->key];
 
             } elseif( function_exists("get_metadata") && function_exists("get_the_ID") ) {
 
                 $object_id = empty($object_id) ? get_the_ID() : $object_id;
-                $value = get_metadata( 'post', $object_id, $this->key, true);
+                $value = get_metadata( 'post', $object_id, $this->key, true);              
                 
             } else {
 
