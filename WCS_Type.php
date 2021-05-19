@@ -49,10 +49,10 @@
                 $this->key = $key;
                 $this->args = array_merge([
 
-                    'supports' => ['thumbnail'],
+                    'supports' => ['title','editor','revisions','excerpt','thumbnail'],
                     'has_archive' => true
 
-                ],$args);
+                ], $args);
                 
             } else {
 
