@@ -47,9 +47,12 @@
             if( $this->validateKey($key) ) {
                 
                 $this->key = $key;
-                $this->args = $args;
+                $this->args = array_merge([
 
-                $this->setArgs('supports', ['thumbnail']);
+                    'supports' => ['thumbnail'],
+                    'has_archive' => true
+
+                ],$args);
                 
             } else {
 
