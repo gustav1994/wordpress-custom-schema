@@ -147,3 +147,15 @@ require_once($base . "/fields/WCS_Radiobutton.php");
                 ])
         ])->hook();
 ```
+## Roadmap
+
+### Field Types
+1. Repeater field. Put fields in a repeater group and allow end-users add extra rows of data if necessary.
+2. File upload
+3. WYSIWEG editor in custom field
+
+### Functionality
+1. Frontend input validation (JavaScript)
+2. Backend input validation (PHP)
+3. Generated (calculated fields). Add a field that is calculated whenever the save-post hook is executed
+4. Consider creating custom hooks in plugin lifecycle
