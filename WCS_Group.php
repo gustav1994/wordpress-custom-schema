@@ -100,7 +100,7 @@
                 }
 
             } else {
-                throw new Exception("WP function add_action was not avalable");
+                throw new Exception("WP function add_action was not available");
             }
 
             return true;
