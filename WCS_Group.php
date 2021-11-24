@@ -308,7 +308,7 @@
             }
 
             return "
-                <div class='row g-4'>
+                <div class='row gx-md-4 gy-4'>
                     ". implode('', $columns) . "
                 </div>
             ";
