@@ -13,14 +13,14 @@
          *
          * @var string
          */
-        protected $key;
+        protected string $key;
 
         /**
          * Arguments passed to register_post_type
          *
          * @var array
          */
-        protected $args = [];
+        protected array $args = [];
 
         /**
          * Array of Wordpress Meta boxes that containts fields
@@ -28,14 +28,14 @@
          *
          * @var array
          */
-        protected $groups = [];
+        protected array $groups = [];
 
         /**
          * Keep state of the hook int WP
          *
          * @var boolean
          */
-        protected $hooked = false;
+        protected bool $hooked = false;
 
         /**
          * Set the post type key
@@ -70,7 +70,7 @@
          * @param [type] $value
          * @return void
          */
-        public function setArgs( $key, $value = null )
+        public function setArgs($key, $value = null ) : object
         {
             $key = is_array($key) ? $key : [$key => $value];
             
@@ -127,7 +127,7 @@
          * @param [type] $groups
          * @return void
          */
-        public function addGroups( $groups )
+        public function addGroups( $groups ) : object
         {
             $groups = is_array($groups) ? $groups : [$groups];
 
@@ -149,9 +149,9 @@
          * @param string $key
          * @return bool
          */
-        private function validateKey( $key ) : bool
+        private function validateKey(string $key ) : bool
         {
-            return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
+            return preg_match("/^[a-z\-_]{1,20}$/", $key);
         }
    
     }

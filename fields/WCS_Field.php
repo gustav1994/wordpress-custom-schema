@@ -11,35 +11,35 @@
          *
          * @var string
          */
-        public $key;
+        public string $key;
 
         /**
          * End-user readable name
          *
          * @var string
          */
-        protected $name;
+        protected ?string $name = null;
 
         /**
          * Default field value if nothing has been set
          *
          * @var mixed
          */
-        protected $default_value;        
+        protected $default_value = null;
 
         /**
          * Input description
          *
          * @var string
          */
-        protected $description;
+        protected ?string $description = null;
 
         /**
          * Id for the HTML elements
          *
          * @var string
          */
-        protected $element_id;
+        protected string $element_id = '';
 
         /**
          * Closure function for sanitizing value if needed
@@ -60,7 +60,7 @@
          *
          * @var array
          */
-        protected $post_types = [];
+        protected array $post_types = [];
 
         /**
          * Utilizes the Bootstrap grid system this will be the start position
@@ -73,33 +73,33 @@
          *
          * @var int
          */
-        public $start_position;
+        public ?int $start_position = null;
 
         /**
          * End position
          *         
          * @return int
          */
-        public $end_position;
+        public ?int $end_position = null;
 
         /**
          * Should field be visible as column in Post-Type overview
          *
          * @var boolean
          */
-        public $visible_column = false;
+        public bool $visible_column = false;
 
         /**
          * If we ahve already hooked into the WP eco-system
          *
          * @var boolean
          */
-        protected $hooked = false;
+        protected bool $hooked = false;
         
         /**
          * Enforce sub-classes to implement a rendering method
          *
-         * @return void
+         * @return string
          */  
         abstract function render( $post ) : string;
 
@@ -177,7 +177,7 @@
          * @param [type] $types
          * @return void
          */
-        public function setPostTypes( $types )
+        public function setPostTypes( $types ) : object
         {
             $types = is_array($types) ? $types : [$types];
 
@@ -198,7 +198,7 @@
          * @todo split up logic into several separate functions
          * @return void
          */
-        public function hook( bool $force = false )
+        public function hook( bool $force = false ) : bool
         {
             try {
 
@@ -227,7 +227,7 @@
          * @param boolean $force
          * @return void
          */
-        protected function hookVisibleColumn( bool $force = false )
+        protected function hookVisibleColumn( bool $force = false ) : object
         {
             if( function_exists("add_action") && function_exists("add_filter") ) {
 
@@ -281,7 +281,7 @@
          * @param boolean $force
          * @return void
          */
-        protected function hookSave( bool $force = false )
+        protected function hookSave( bool $force = false ) : object
         {
             if( function_exists("add_action") && ($this->hooked == false || $force) ) {
                 
@@ -310,7 +310,7 @@
          * @param bool $force
          * @return object
          */
-        protected function hookRegisterField( bool $force = false )
+        protected function hookRegisterField( bool $force = false ) : object
         {
             if( function_exists("add_action") ) {
 
@@ -346,7 +346,7 @@
          * @param [type] $post
          * @return void
          */
-        public function output( $post = null )
+        public function output( $post = null ) : string
         {
             $html = $this->render($post);            
             
@@ -396,7 +396,7 @@
          * @param string $id
          * @return void
          */
-        public function setElementId( string $id )
+        public function setElementId( string $id ) : object
         {
             $this->element_id = $id;
 
@@ -409,7 +409,7 @@
          * @param string $name
          * @return void
          */
-        public function setName( string $name )
+        public function setName( string $name ) : object
         {
             if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name) {
                 $this->name = $name;
@@ -426,7 +426,7 @@
          * @param mixed $value
          * @return void
          */
-        public function setDefaultValue( $value )
+        public function setDefaultValue( $value ) : object
         {
             $this->default_value = $value;
 
@@ -453,7 +453,7 @@
          * @param string $name
          * @return void
          */
-        public function setDescription( string $description )
+        public function setDescription( string $description ) : object
         {
             if( strip_tags($description) == $description ) {
                 $this->description = $description;
@@ -472,7 +472,7 @@
          * @param integer $end
          * @return void
          */
-        public function setPosition( int $start, int $end)
+        public function setPosition( int $start, int $end) : object
         {
             $length = $end - $start;
 
@@ -494,7 +494,7 @@
          * @param [type] $callable
          * @return void
          */
-        public function setSanitizer( $callable )
+        public function setSanitizer( $callable ) : object
         {
             if( is_callable($callable) ) {
 
@@ -513,7 +513,7 @@
          * @param [type] $callable
          * @return void
          */
-        public function setValidator( $callable )
+        public function setValidator( $callable ) : object
         {
             if( is_callable($callable) ) {
 
@@ -544,7 +544,7 @@
          *
          * @return void
          */
-        protected function getNonceName()
+        protected function getNonceName() : string
         {
             return "_WCS_{$this->key}_nonce";
         }
@@ -556,9 +556,9 @@
          * @param string $key
          * @return bool
          */
-        protected function validateKey( $key ) : bool
+        protected function validateKey( string $key ) : bool
         {
-            return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
+            return preg_match("/^[a-z\-_]{1,20}$/", $key);
         }
 
         /**
@@ -619,18 +619,22 @@
         {
             $string = '';
 
-            if( $letters )
+            if( $letters ) {
                 $string .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
         
-            if( $numbers )
+            if( $numbers ) {
                 $string .= '0123456789';
+            }
         
-            if( $signs )
+            if( $signs ) {
                 $string .= '@$%&/()=+-';
+            }
         
             // Check to see if string length is
-            if(strlen($string) == 0)
+            if(strlen($string) == 0) {
                 return false;
+            }
         
             // Pick random length
             $length = rand($min, $max);

@@ -11,28 +11,28 @@
          *
          * @var [type]
          */
-        public $key;
+        public string $key;
 
         /**
          * The Meta Box Title
          *
          * @var [type]
          */
-        protected $name;
+        protected ?string $name = null;
 
         /**
          * Initial description of the field group
          *
          * @var string
          */
-        protected $description;
+        protected ?string $description = null;
 
         /**
          * Define what post-types this group should be activated for
          *
          * @var array
          */
-        protected $post_types = [];
+        protected array $post_types = [];
 
         /**
          * Array of custom fields all instances of class that inherits the
@@ -40,14 +40,14 @@
          *
          * @var array
          */
-        protected $fields = [];
+        protected array $fields = [];
 
         /**
          * If already hooked into WP ecosystem
          *
          * @var boolean
          */
-        protected $hooked = false;
+        protected bool $hooked = false;
 
         /**
          * Initiate the field group and tell wordpress when to hook into
@@ -113,7 +113,7 @@
          * @param [type] $types
          * @return void
          */
-        public function setPostTypes( $types )
+        public function setPostTypes( $types ) : object
         {
             $types = is_array($types) ? $types : [$types];
 
@@ -134,7 +134,7 @@
          * @param string $name
          * @return void
          */
-        public function setName( string $name ) 
+        public function setName( string $name ) : object
         {
             if( strlen($name) > 0 && strlen($name) < 256 && strip_tags($name) == $name ) {
                 $this->name = $name;
@@ -151,7 +151,7 @@
          * @param string $description
          * @return void
          */
-        public function setDescription( string $description )
+        public function setDescription( string $description ) : object
         {
             if( strip_tags($description) == $description ) {
                 $this->description = $description;
@@ -168,7 +168,7 @@
          * @param [type] $fields
          * @return void
          */
-        public function addFields( $fields )
+        public function addFields( $fields ) : object
         {
             $fields = is_array($fields) ? $fields : [$fields];
 
@@ -315,9 +315,9 @@
          * @param string $key
          * @return bool
          */
-        protected function validateKey( $key ) : bool
+        protected function validateKey(string $key ) : bool
         {
-            return is_string($key) && preg_match("/^[a-z\-\_]{1,20}$/", $key);
+            return preg_match("/^[a-z\-_]{1,20}$/", $key);
         }
 
     }
