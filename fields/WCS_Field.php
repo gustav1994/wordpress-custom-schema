@@ -316,18 +316,18 @@
 
                 if( $this->hooked == false || $force ) {
 
-                    $registerMeta = function($type){
-                        return register_meta('post', $this->key, [
-                            'object_subtype' => $type,
-                            'description' => $this->description,
-                            'show_in_rest' => true
-                        ]);
-                    };
-
                     foreach( $this->post_types as $type ) {
 
-                        add_action("init", $registerMeta($type));
-                        add_action("rest_api_init", $registerMeta($type));
+                        $registerMeta = function() use ($type){
+                            return register_meta('post', $this->key, [
+                                'object_subtype' => $type,
+                                'description' => $this->description,
+                                'show_in_rest' => true
+                            ]);
+                        };
+
+                        add_action("init", $registerMeta);
+                        add_action("rest_api_init", $registerMeta);
 
                     }                    
 
