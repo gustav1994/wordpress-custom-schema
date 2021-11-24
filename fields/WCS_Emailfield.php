@@ -11,10 +11,22 @@
         
         public function render( $post ) : string
         {
+            $useInputGroup = !empty($this->suffix) || !empty($this->prefix);
+
             return "
                 <label for='{$this->element_id}' class='form-label'>{$this->name}</label>
-                <input type='email' id='{$this->element_id}' class='form-control rounded-0' name='{$this->key}' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}' value='{$this->getValue()}'>
-                <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                
+                ". ($useInputGroup ? '<div class="input-group">' : '') ."
+                    
+                    ". (empty($this->prefix) ? '' : "<span class='input-group-text rounded-0'>{$this->prefix}</span>") ."
+                
+                        <input type='email' id='{$this->element_id}' class='form-control rounded-0' name='{$this->key}' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}' value='{$this->getValue()}'>
+                        
+                        ". (empty($this->suffix) ? '' : "<span class='input-group-text rounded-0'>{$this->suffix}</span>") ."
+                
+                ". ($useInputGroup ? '</div>' : '') . "
+                
+                <div id='{$this->element_id}-help-text' class='form-text fst-italic'>{$this->description}</div>
                 
                 {$this->getNonceField()}
             ";

@@ -35,6 +35,20 @@
         protected ?string $description = null;
 
         /**
+         * Prefix symbol or string to prefix input field
+         *
+         * @var string|null
+         */
+        protected ?string $prefix = null;
+
+        /**
+         * Suffix symbol or string to prefix input field
+         *
+         * @var string|null
+         */
+        protected ?string $suffix = null;
+
+        /**
          * Id for the HTML elements
          *
          * @var string
@@ -406,6 +420,42 @@
         public function setElementId( string $id ) : object
         {
             $this->element_id = $id;
+
+            return $this;
+        }
+
+        /**
+         * Set prefix
+         *
+         * @param string $value
+         * @return object
+         * @throws Exception
+         */
+        public function setPrefix(string $value ) : object
+        {
+            if( strlen($value) <= 10 && strip_tags($value) == $value ) {
+                $this->prefix = trim($value);
+            } else {
+                throw new Exception("Invalid prefix symbol/text");
+            }
+
+            return $this;
+        }
+
+        /**
+         * Set suffix
+         *
+         * @param string $value
+         * @return object
+         * @throws Exception
+         */
+        public function setSuffix(string $value ) : object
+        {
+            if( strlen($value) <= 10 && strip_tags($value) == $value ) {
+                $this->suffix = trim($value);
+            } else {
+                throw new Exception("Invalid prefix symbol/text");
+            }
 
             return $this;
         }

@@ -23,6 +23,8 @@
 
         public function render( $post ) : string
         {
+            $useInputGroup = !empty($this->suffix) || !empty($this->prefix);
+
             $options_arr = [];
 
             foreach($this->options as $key => $value) {
@@ -32,11 +34,21 @@
             }
 
             return "
-                <label for='{$this->element_id}' class='form-label'>{$this->name}</label>                
-                <select name='{$this->key}' id='{$this->element_id}' class='form-control rounded-0' aria-describedby='{$this->element_id}-help-text'>
-                    ". implode("", $options_arr) . "
-                </select>
-                <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
+                <label for='{$this->element_id}' class='form-label'>{$this->name}</label>     
+                
+                ". ($useInputGroup ? '<div class="input-group">' : '') ."
+                    
+                    ". (empty($this->prefix) ? '' : "<span class='input-group-text rounded-0'>{$this->prefix}</span>") ."
+                           
+                        <select name='{$this->key}' id='{$this->element_id}' class='form-control rounded-0' aria-describedby='{$this->element_id}-help-text'>
+                            ". implode("", $options_arr) . "
+                        </select>
+                        
+                        ". (empty($this->suffix) ? '' : "<span class='input-group-text rounded-0'>{$this->suffix}</span>") ."
+                
+                ". ($useInputGroup ? '</div>' : '') . "
+                
+                <div id='{$this->element_id}-help-text' class='form-text fst-italic'>{$this->description}</div>
                 
                 {$this->getNonceField()}
             ";
