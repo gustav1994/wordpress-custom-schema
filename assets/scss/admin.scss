@@ -1,7 +1,7 @@
 /**
 * Command to compile and watch SASS FILE: (Antager at du allerede står i mappen med scss filerne)
 *      
-*      sass --watch app.scss ../css/app.min.css
+*      sass --watch admin.scss ../css/admin.min.css
 *
 * Installer SASS/SCSS på Mac:
 *      
@@ -19,7 +19,20 @@
 */
 
 .wp-admin-bootstrap {
-    
-    @import "./bootstrap-5.0.0-beta3/bootstrap";
+
+    // Full bootstrap
+    //@import "./bootstrap-5.0.0-beta3/bootstrap";
+
+    // Partial bootstrap
+    @import "./bootstrap-5.0.0-beta3/functions";
+    @import "./bootstrap-5.0.0-beta3/variables";
+    @import "./bootstrap-5.0.0-beta3/mixins";
+    @import "./bootstrap-5.0.0-beta3/root";
+
+    @import "./bootstrap-5.0.0-beta3/utilities";
+    @import "./bootstrap-5.0.0-beta3/reboot";
+    @import "./bootstrap-5.0.0-beta3/containers";
+    @import "./bootstrap-5.0.0-beta3/grid";
+    @import "./bootstrap-5.0.0-beta3/forms";
 
 }
