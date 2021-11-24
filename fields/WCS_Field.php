@@ -161,7 +161,7 @@
 
                 } else {
 
-                    throw new Exception("Missing wp-functin update_post_meta");
+                    throw new Exception("Missing wp-function update_post_meta");
 
                 }
 
