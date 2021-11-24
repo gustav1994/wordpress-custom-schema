@@ -33,7 +33,7 @@
 
             return "
                 <label for='{$this->element_id}' class='form-label'>{$this->name}</label>                
-                <select name='{$this->key}' id='{$this->element_id}' class='form-control' aria-describedby='{$this->element_id}-help-text'>
+                <select name='{$this->key}' id='{$this->element_id}' class='form-control rounded-0' aria-describedby='{$this->element_id}-help-text'>
                     ". implode("", $options_arr) . "
                 </select>
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>

@@ -13,7 +13,7 @@
         {
             return "
                 <label for='{$this->element_id}' class='form-label'>{$this->name}</label>
-                <input type='text' id='{$this->element_id}' class='form-control' name='{$this->key}' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}' value='{$this->getValue()}'>
+                <input type='text' id='{$this->element_id}' class='form-control rounded-0' name='{$this->key}' aria-describedby='{$this->element_id}-help-text' placeholder='{$this->name}' value='{$this->getValue()}'>
                 <div id='{$this->element_id}-help-text' class='form-text'>{$this->description}</div>
                 
                 {$this->getNonceField()}
