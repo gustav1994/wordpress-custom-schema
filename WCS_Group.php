@@ -70,7 +70,7 @@
          *
          * @return void
          */
-        public function hook( bool $hooked = false ) : bool
+        public function hook( bool $force = false ) : bool
         {
             if( function_exists("add_action") ) {
 
