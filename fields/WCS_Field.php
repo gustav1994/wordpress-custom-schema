@@ -109,12 +109,13 @@
          * 
          * @param mixed $value
          */
-        abstract function sanitize( $value );             
+        abstract function sanitize( $value );
 
         /**
-         * Constructor taking in the field name 
+         * Constructor taking in the field name
          *
          * @param string $key
+         * @throws Exception
          */
         public function __construct( string $key )
         {
@@ -133,10 +134,11 @@
         }
 
         /**
-         * Function that will hook into Wordpress Save_post and ensure that 
+         * Function that will hook into Wordpress Save_post and ensure that
          * meta data will be updated on the post
          *
          * @return integer
+         * @throws Exception
          */
         public function save( int $post_id, $post = null ) : int
         {                                    
@@ -168,14 +170,15 @@
             }   
             
             return $post_id;
-        }  
+        }
 
         /**
-         * Define what post-types we should activate 
+         * Define what post-types we should activate
          * this group for
          *
          * @param [type] $types
          * @return void
+         * @throws Exception
          */
         public function setPostTypes( $types ) : object
         {
@@ -194,9 +197,9 @@
 
         /**
          * Hook into wordpress sytem
-         
-         * @todo split up logic into several separate functions
          * @return void
+         * @throws Exception
+         * @todo split up logic into several separate functions
          */
         public function hook( bool $force = false ) : bool
         {
@@ -219,13 +222,14 @@
 
             return true;
         }
-        
+
         /**
          * Hook into the column logic
          * so admins can add columns to the post type view
          *
          * @param boolean $force
          * @return void
+         * @throws Exception
          */
         protected function hookVisibleColumn( bool $force = false ) : object
         {
@@ -280,6 +284,7 @@
          *
          * @param boolean $force
          * @return void
+         * @throws Exception
          */
         protected function hookSave( bool $force = false ) : object
         {
@@ -306,9 +311,10 @@
 
         /**
          * Register this field into wp
-         * 
+         *
          * @param bool $force
          * @return object
+         * @throws Exception
          */
         protected function hookRegisterField( bool $force = false ) : object
         {
@@ -361,6 +367,7 @@
          *
          * @param integer $object_id
          * @return void
+         * @throws Exception
          */
         public function getValue( int $object_id = 0, bool $echo = false ) : string
         {
@@ -408,6 +415,7 @@
          *
          * @param string $name
          * @return void
+         * @throws Exception
          */
         public function setName( string $name ) : object
         {
@@ -452,6 +460,7 @@
          *
          * @param string $name
          * @return void
+         * @throws Exception
          */
         public function setDescription( string $description ) : object
         {
@@ -471,6 +480,7 @@
          * @param integer $start
          * @param integer $end
          * @return void
+         * @throws Exception
          */
         public function setPosition( int $start, int $end) : object
         {
@@ -493,6 +503,7 @@
          *
          * @param [type] $callable
          * @return void
+         * @throws Exception
          */
         public function setSanitizer( $callable ) : object
         {
@@ -512,6 +523,7 @@
          *
          * @param [type] $callable
          * @return void
+         * @throws Exception
          */
         public function setValidator( $callable ) : object
         {

@@ -41,6 +41,7 @@
          * Set the post type key
          *
          * @param string $key
+         * @throws Exception
          */
         public function __construct( string $key, array $args = [] )
         {
@@ -86,6 +87,7 @@
          * along all its groups that will render the custom fields
          *
          * @return boolean
+         * @throws Exception
          */
         public function hook( bool $force = false ) : bool
         {   
@@ -120,12 +122,13 @@
 
             return true;
         }
-        
+
         /**
          * Add one or more instances of WCS_Group
          *
          * @param [type] $groups
          * @return void
+         * @throws Exception
          */
         public function addGroups( $groups ) : object
         {

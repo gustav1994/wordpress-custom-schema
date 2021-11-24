@@ -51,7 +51,8 @@
 
         /**
          * Initiate the field group and tell wordpress when to hook into
-         * 
+         *
+         * @throws Exception
          * @var string $key
          */
         public function __construct( string $key )
@@ -64,11 +65,12 @@
 
             return $this;
         }
-        
+
         /**
          * Hook into wordpress add_meta_boxes with the render function
          *
          * @return void
+         * @throws Exception
          */
         public function hook( bool $force = false ) : bool
         {
@@ -107,11 +109,12 @@
         }
 
         /**
-         * Define what post-types we should activate 
+         * Define what post-types we should activate
          * this group for
          *
          * @param [type] $types
          * @return void
+         * @throws Exception
          */
         public function setPostTypes( $types ) : object
         {
@@ -133,6 +136,7 @@
          *
          * @param string $name
          * @return void
+         * @throws Exception
          */
         public function setName( string $name ) : object
         {
@@ -150,6 +154,7 @@
          *
          * @param string $description
          * @return void
+         * @throws Exception
          */
         public function setDescription( string $description ) : object
         {
@@ -167,6 +172,7 @@
          *
          * @param [type] $fields
          * @return void
+         * @throws Exception
          */
         public function addFields( $fields ) : object
         {
